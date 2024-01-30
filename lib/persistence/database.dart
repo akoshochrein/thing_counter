@@ -25,6 +25,16 @@ class AppDatabase extends _$AppDatabase {
     return select(thing).watch();
   }
 
+  Future<void> addThing(String name) async {
+    await into(thing).insert(ThingCompanion.insert(
+      name: name,
+    ));
+  }
+
+  Future<void> removeThings() async {
+    await delete(thing).go();
+  }
+
   @override
   int get schemaVersion => 1;
 }

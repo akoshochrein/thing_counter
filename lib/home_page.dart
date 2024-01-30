@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thing_counter/components/thing_list_item.dart';
 import 'package:thing_counter/models/count_event.dart';
-// import 'package:thing_counter/models/thing.dart';
 import 'package:thing_counter/persistence/database.dart';
 
 import 'components/create_new_thing_drawer.dart';
@@ -26,15 +25,11 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<CountEvent> _countEvents = [];
 
   void _addThing(String name) async {
-    await widget.database
-        .into(widget.database.thing)
-        .insert(ThingCompanion.insert(
-          name: name,
-        ));
+    await widget.database.addThing(name);
   }
 
   void _removeThings() async {
-    await widget.database.delete(widget.database.thing).go();
+    await widget.database.removeThings();
   }
 
   void _addCountEvent(CountEvent event) {
