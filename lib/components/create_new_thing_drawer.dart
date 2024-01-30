@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CreateNewThingDrawer extends StatefulWidget {
-  const CreateNewThingDrawer({super.key, required this.addThing});
+  const CreateNewThingDrawer({
+    super.key,
+    required this.addThing,
+    required this.removeThings,
+  });
 
   final void Function(String name) addThing;
+  final void Function() removeThings;
 
   @override
   State<CreateNewThingDrawer> createState() => _CreateNewThingDrawerState();
@@ -40,6 +45,13 @@ class _CreateNewThingDrawerState extends State<CreateNewThingDrawer> {
               Navigator.pop(context);
             },
             child: const Text('Add'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              widget.removeThings();
+              Navigator.pop(context);
+            },
+            child: const Text('Clear'),
           ),
         ],
       ),
