@@ -16,7 +16,8 @@ class ThingListItem extends StatefulWidget {
   State<ThingListItem> createState() => _ThingListItemState();
 }
 
-class _ThingListItemState extends State<ThingListItem> {
+class _ThingListItemState extends State<ThingListItem>
+    with TickerProviderStateMixin {
   bool _isOpen = false;
   final List<CountEventData> _countEvents = [];
 
@@ -55,39 +56,46 @@ class _ThingListItemState extends State<ThingListItem> {
           color: Colors.deepPurple.shade100,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.thing.name,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      '${events.length}',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _addCountEvent(widget.thing);
-                      },
-                      icon: const Icon(Icons.add),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            ...(_isOpen
-                ? events.map(
-                    (event) => Text(
-                      DateFormat('yyyy-MM-dd HH:mm:ss').format(event.createdAt),
-                    ),
-                  )
-                : []),
-          ],
+        child: AnimatedSize(
+          duration: const Duration(milliseconds: 2000),
+          curve: Curves.fastLinearToSlowEaseIn,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.thing.name,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '${events.length}',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          _addCountEvent(widget.thing);
+                        },
+                        icon: const Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              ...(_isOpen
+                  ? events.map(
+                      (event) => Text(
+                        DateFormat('yyyy-MM-dd HH:mm:ss')
+                            .format(event.createdAt),
+                      ),
+                    )
+                  : []),
+            ],
+          ),
         ),
       ),
     );
