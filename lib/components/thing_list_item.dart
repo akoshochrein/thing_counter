@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:thing_counter/models/count_event.dart';
 import 'package:thing_counter/persistence/database.dart';
 
 class ThingListItem extends StatefulWidget {
@@ -11,8 +10,8 @@ class ThingListItem extends StatefulWidget {
   });
 
   final ThingData thing;
-  final List<CountEvent> countEvents;
-  final void Function(CountEvent countEvent) addCountEvent;
+  final List<CountEventData> countEvents;
+  final void Function(ThingData thing) addCountEvent;
 
   @override
   State<ThingListItem> createState() => _ThingListItemState();
@@ -21,6 +20,9 @@ class ThingListItem extends StatefulWidget {
 class _ThingListItemState extends State<ThingListItem> {
   @override
   Widget build(BuildContext context) {
+    int eventCount = widget.countEvents
+        .where((event) => event.thing == widget.thing.id)
+        .length;
     return Container(
       margin: const EdgeInsets.symmetric(
         vertical: 8,
@@ -44,16 +46,12 @@ class _ThingListItemState extends State<ThingListItem> {
           Row(
             children: [
               Text(
-                '${widget.countEvents.where((event) => event.thing == widget.thing).length}',
+                '$eventCount',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               IconButton(
                 onPressed: () {
-                  widget.addCountEvent(
-                    CountEvent(
-                      thing: widget.thing,
-                    ),
-                  );
+                  widget.addCountEvent(widget.thing);
                 },
                 icon: const Icon(Icons.add),
               ),

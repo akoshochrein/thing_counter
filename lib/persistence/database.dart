@@ -17,7 +17,14 @@ class Thing extends Table {
   DateTimeColumn get updatedAt => dateTime().nullable()();
 }
 
-@DriftDatabase(tables: [Thing])
+class CountEvent extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get thing => integer().customConstraint('REFERENCES thing(id)')();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+}
+
+@DriftDatabase(tables: [Thing, CountEvent])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -35,8 +42,30 @@ class AppDatabase extends _$AppDatabase {
     await delete(thing).go();
   }
 
+  Stream<List<CountEventData>> watchCountEvents() {
+    return select(countEvent).watch();
+  }
+
+  Future<void> addCountEvent(ThingData thing) async {
+    await into(countEvent).insert(CountEventCompanion(thing: Value(thing.id)));
+  }
+
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 3) {
+          await m.createTable(countEvent);
+        }
+      },
+    );
+  }
 }
 
 LazyDatabase _openConnection() {

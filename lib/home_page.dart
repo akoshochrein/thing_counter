@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:thing_counter/components/thing_list_item.dart';
-import 'package:thing_counter/models/count_event.dart';
 import 'package:thing_counter/persistence/database.dart';
 
 import 'components/create_new_thing_drawer.dart';
@@ -21,8 +20,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<ThingData> _things = [];
-
-  final List<CountEvent> _countEvents = [];
+  final List<CountEventData> _countEvents = [];
 
   void _addThing(String name) async {
     await widget.database.addThing(name);
@@ -32,20 +30,26 @@ class _MyHomePageState extends State<MyHomePage> {
     await widget.database.removeThings();
   }
 
-  void _addCountEvent(CountEvent event) {
-    setState(() {
-      _countEvents.add(event);
-    });
+  void _addCountEvent(ThingData thing) async {
+    await widget.database.addCountEvent(thing);
   }
 
   @override
   Widget build(BuildContext context) {
     final thingSream = widget.database.watchThings();
+    final countEvents = widget.database.watchCountEvents();
 
     thingSream.listen((event) {
       setState(() {
         _things.clear();
         _things.addAll(event);
+      });
+    });
+
+    countEvents.listen((event) {
+      setState(() {
+        _countEvents.clear();
+        _countEvents.addAll(event);
       });
     });
 
