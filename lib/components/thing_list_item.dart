@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Add this line to import the intl package
+import 'package:intl/intl.dart';
 import 'package:thing_counter/persistence/database.dart';
 
 class ThingListItem extends StatefulWidget {
