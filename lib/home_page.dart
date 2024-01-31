@@ -20,7 +20,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<ThingData> _things = [];
-  final List<CountEventData> _countEvents = [];
 
   void _addThing(String name) async {
     await widget.database.addThing(name);
@@ -30,26 +29,14 @@ class _MyHomePageState extends State<MyHomePage> {
     await widget.database.removeThings();
   }
 
-  void _addCountEvent(ThingData thing) async {
-    await widget.database.addCountEvent(thing);
-  }
-
   @override
   Widget build(BuildContext context) {
     final thingSream = widget.database.watchThings();
-    final countEvents = widget.database.watchCountEvents();
 
     thingSream.listen((event) {
       setState(() {
         _things.clear();
         _things.addAll(event);
-      });
-    });
-
-    countEvents.listen((event) {
-      setState(() {
-        _countEvents.clear();
-        _countEvents.addAll(event);
       });
     });
 
@@ -59,8 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
           itemCount: _things.length,
           itemBuilder: (BuildContext context, int index) => ThingListItem(
             thing: _things[index],
-            countEvents: _countEvents,
-            addCountEvent: _addCountEvent,
+            database: widget.database,
           ),
         ),
       ),

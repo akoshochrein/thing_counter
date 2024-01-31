@@ -42,8 +42,8 @@ class AppDatabase extends _$AppDatabase {
     await delete(thing).go();
   }
 
-  Stream<List<CountEventData>> watchCountEvents() {
-    return select(countEvent).watch();
+  Stream<List<CountEventData>> watchCountEvents(ThingData thing) {
+    return (select(countEvent)..where((c) => c.thing.equals(thing.id))).watch();
   }
 
   Future<void> addCountEvent(ThingData thing) async {

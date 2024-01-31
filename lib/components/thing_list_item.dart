@@ -6,13 +6,11 @@ class ThingListItem extends StatefulWidget {
   const ThingListItem({
     super.key,
     required this.thing,
-    required this.countEvents,
-    required this.addCountEvent,
+    required this.database,
   });
 
   final ThingData thing;
-  final List<CountEventData> countEvents;
-  final void Function(ThingData thing) addCountEvent;
+  final AppDatabase database;
 
   @override
   State<ThingListItem> createState() => _ThingListItemState();
@@ -20,12 +18,26 @@ class ThingListItem extends StatefulWidget {
 
 class _ThingListItemState extends State<ThingListItem> {
   bool _isOpen = false;
+  final List<CountEventData> _countEvents = [];
+
+  void _addCountEvent(ThingData thing) async {
+    await widget.database.addCountEvent(thing);
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<CountEventData> events = widget.countEvents
-        .where((event) => event.thing == widget.thing.id)
-        .toList();
+    final countEvents = widget.database.watchCountEvents(widget.thing);
+
+    countEvents.listen((event) {
+      setState(() {
+        _countEvents.clear();
+        _countEvents.addAll(event);
+      });
+    });
+
+    List<CountEventData> events =
+        _countEvents.where((event) => event.thing == widget.thing.id).toList();
+
     return GestureDetector(
       onLongPress: () => setState(() {
         _isOpen = !_isOpen;
@@ -60,7 +72,7 @@ class _ThingListItemState extends State<ThingListItem> {
                     ),
                     IconButton(
                       onPressed: () {
-                        widget.addCountEvent(widget.thing);
+                        _addCountEvent(widget.thing);
                       },
                       icon: const Icon(Icons.add),
                     ),
