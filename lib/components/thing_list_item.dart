@@ -36,9 +36,6 @@ class _ThingListItemState extends State<ThingListItem>
       });
     });
 
-    List<CountEventData> events =
-        _countEvents.where((event) => event.thing == widget.thing.id).toList();
-
     return GestureDetector(
       onLongPress: () => setState(() {
         _isOpen = !_isOpen;
@@ -57,7 +54,7 @@ class _ThingListItemState extends State<ThingListItem>
           borderRadius: BorderRadius.circular(8),
         ),
         child: AnimatedSize(
-          duration: const Duration(milliseconds: 2000),
+          duration: const Duration(milliseconds: 1500),
           curve: Curves.fastLinearToSlowEaseIn,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +70,7 @@ class _ThingListItemState extends State<ThingListItem>
                   Row(
                     children: [
                       Text(
-                        '${events.length}',
+                        '${_countEvents.length}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       IconButton(
@@ -87,7 +84,7 @@ class _ThingListItemState extends State<ThingListItem>
                 ],
               ),
               ...(_isOpen
-                  ? events.map(
+                  ? _countEvents.map(
                       (event) => Text(
                         DateFormat('yyyy-MM-dd HH:mm:ss')
                             .format(event.createdAt),
