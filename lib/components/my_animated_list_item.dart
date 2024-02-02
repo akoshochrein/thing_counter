@@ -44,6 +44,7 @@ class _MyAnimatedListItemState extends State<MyAnimatedListItem>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -51,7 +52,7 @@ class _MyAnimatedListItemState extends State<MyAnimatedListItem>
           opacity: _opacity < 0 ? 0 : _opacity,
           child: Text(
             widget.text,
-            style: const TextStyle(fontSize: 18),
+            style: theme.textTheme.bodyMedium,
           ),
         ),
       ],

@@ -63,13 +63,17 @@ class _ThingListItemState extends State<ThingListItem>
               children: [
                 Text(
                   widget.thing.name,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 Row(
                   children: [
                     Text(
                       '${_countEvents.length}',
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     IconButton(
                       onPressed: () {
@@ -81,12 +85,14 @@ class _ThingListItemState extends State<ThingListItem>
                 ),
               ],
             ),
+            (_isOpen ? const SizedBox(height: 8) : Container()),
             Container(
               child: _isOpen
                   ? MyAnimatedList(
-                      strings: _countEvents
+                      padding: const EdgeInsets.only(bottom: 8),
+                      strings: _countEvents.reversed
                           .map(
-                            (event) => DateFormat.yMd().format(event.createdAt),
+                            (event) => DateFormat().format(event.createdAt),
                           )
                           .toList(),
                     )
