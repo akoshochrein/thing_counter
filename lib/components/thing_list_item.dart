@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:thing_counter/components/my_animated_list.dart';
 import 'package:thing_counter/persistence/database.dart';
 
 class ThingListItem extends StatefulWidget {
@@ -53,46 +54,45 @@ class _ThingListItemState extends State<ThingListItem>
           color: Colors.deepPurple.shade100,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: AnimatedSize(
-          duration: const Duration(milliseconds: 1500),
-          curve: Curves.fastLinearToSlowEaseIn,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.thing.name,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        '${_countEvents.length}',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          _addCountEvent(widget.thing);
-                        },
-                        icon: const Icon(Icons.add),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              ...(_isOpen
-                  ? _countEvents.map(
-                      (event) => Text(
-                        DateFormat('yyyy-MM-dd HH:mm:ss')
-                            .format(event.createdAt),
-                      ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.thing.name,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '${_countEvents.length}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _addCountEvent(widget.thing);
+                      },
+                      icon: const Icon(Icons.add),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Container(
+              child: _isOpen
+                  ? MyAnimatedList(
+                      strings: _countEvents
+                          .map(
+                            (event) => DateFormat.yMd().format(event.createdAt),
+                          )
+                          .toList(),
                     )
-                  : []),
-            ],
-          ),
+                  : Container(),
+            )
+          ],
         ),
       ),
     );
